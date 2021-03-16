@@ -5,13 +5,13 @@ import java.awt.event.MouseListener;
 
 public class Login {
     public static void main(String[] args) {
-        Login login=new Login();
+        Login login = new Login();
         login.UI();
     }
 
-    public void UI(){
-        JFrame frame=new JFrame();
-        frame.setSize(430,330);
+    public void UI() {
+        JFrame frame = new JFrame();
+        frame.setSize(430, 330);
         //设置不可改变大小
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -20,21 +20,21 @@ public class Login {
         frame.setUndecorated(true);
         frame.setLayout(null);
 
-        Image image=new ImageIcon("登录背景.jpg").getImage().getScaledInstance(450,350,JFrame.DO_NOTHING_ON_CLOSE);
-        JLabel background=new JLabel(new ImageIcon(image));
-        background.setBounds(0,0,450,350);
+        Image image = new ImageIcon("登录背景.jpg").getImage().getScaledInstance(450, 350, JFrame.DO_NOTHING_ON_CLOSE);
+        JLabel background = new JLabel(new ImageIcon(image));
+        background.setBounds(0, 0, 450, 350);
         //将背景标签放置在中间层
         frame.getLayeredPane().add(background, Integer.valueOf(Integer.MIN_VALUE));
-        JPanel panel=(JPanel) frame.getContentPane();
+        JPanel panel = (JPanel) frame.getContentPane();
         //将最上层设置透明
         panel.setOpaque(false);
 
-        JButton minimize=new JButton(new ImageIcon("最小化.png"));
+        JButton minimize = new JButton(new ImageIcon("最小化.png"));
         //将按钮设置透明
         minimize.setContentAreaFilled(false);
         //将按钮设置为无边框
         minimize.setBorderPainted(false);
-        minimize.setBounds(370,0,30,30);
+        minimize.setBounds(370, 0, 30, 30);
         minimize.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -66,12 +66,12 @@ public class Login {
         });
         frame.add(minimize);
 
-        JButton close=new JButton(new ImageIcon("关闭.png"));
+        JButton close = new JButton(new ImageIcon("关闭.png"));
         //将按钮设置透明
         close.setContentAreaFilled(false);
         //将按钮设置为无边框
         close.setBorderPainted(false);
-        close.setBounds(400,0,30,30);
+        close.setBounds(400, 0, 30, 30);
         close.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -104,6 +104,5 @@ public class Login {
         frame.add(close);
 
         frame.setVisible(true);
-
     }
 }
