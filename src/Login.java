@@ -58,6 +58,7 @@ public class Login {
 
             }
         });
+
         background.addMouseMotionListener(new MouseMotionListener() {
             int StartX, StartY, EndX, EndY;
 
@@ -78,6 +79,7 @@ public class Login {
 
             }
         });
+
         JButton minimize = new JButton(new ImageIcon("最小化.png"));
         //将按钮设置透明
         minimize.setContentAreaFilled(false);
@@ -176,6 +178,7 @@ public class Login {
         frame.add(remember);
 
         Font font = new Font("宋体", Font.BOLD | Font.ITALIC, 16);
+
         JButton sign_up = new JButton("注册账号");
         sign_up.setBounds(330, 120, 120, 30);
         sign_up.setForeground(Color.yellow);
@@ -192,7 +195,8 @@ public class Login {
         forget.setBorderPainted(false);
         frame.add(forget);
 
-        JButton login = new JButton("登录");
+        JButton login = new JButton("登        录");
+        login.setFont(new Font("宋体", Font.BOLD, 15));
         login.setBounds(135, 250, 180, 40);
         frame.add(login);
 
