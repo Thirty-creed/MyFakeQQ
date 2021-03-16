@@ -20,9 +20,9 @@ public class Login {
         frame.setUndecorated(true);
         frame.setLayout(null);
 
-        Image image = new ImageIcon("µÇÂ¼±³¾°.jpg").getImage().getScaledInstance(450, 350, JFrame.DO_NOTHING_ON_CLOSE);
+        Image image = new ImageIcon("µÇÂ¼±³¾°.jpg").getImage().getScaledInstance(430, 330, JFrame.DO_NOTHING_ON_CLOSE);
         JLabel background = new JLabel(new ImageIcon(image));
-        background.setBounds(0, 0, 450, 350);
+        background.setBounds(0, 0, 430, 330);
         //½«±³¾°±êÇ©·ÅÖÃÔÚÖÐ¼ä²ã
         frame.getLayeredPane().add(background, Integer.valueOf(Integer.MIN_VALUE));
         JPanel panel = (JPanel) frame.getContentPane();
