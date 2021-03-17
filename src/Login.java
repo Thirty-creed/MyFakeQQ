@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class Login {
 
-    boolean can_drag = false;
+    private boolean Can_Drag = false;
 
     public static void main(String[] args) {
         Login login = new Login();
@@ -17,6 +17,7 @@ public class Login {
         //设置不可改变大小
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
+        //设置在任务栏显示的图标
         frame.setIconImage(new ImageIcon("图标.jpg").getImage());
         //去边框
         frame.setUndecorated(true);
@@ -45,7 +46,7 @@ public class Login {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                can_drag = false;
+                Can_Drag = false;
             }
 
             @Override
@@ -64,10 +65,10 @@ public class Login {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (!can_drag) {
+                if (!Can_Drag) {
                     StartX = e.getX();
                     StartY = e.getY();
-                    can_drag = true;
+                    Can_Drag = true;
                 }
                 EndX = e.getX();
                 EndY = e.getY();
@@ -105,9 +106,9 @@ public class Login {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                //使按钮呈现红色
+                //使按钮呈现灰色
                 minimize.setContentAreaFilled(true);
-                minimize.setBackground(Color.RED);
+                minimize.setBackground(Color.GRAY);
             }
 
             @Override
@@ -195,10 +196,10 @@ public class Login {
         forget.setBorderPainted(false);
         frame.add(forget);
 
-        JButton login = new JButton("登        录");
-        login.setFont(new Font("宋体", Font.BOLD, 15));
-        login.setBounds(135, 250, 180, 40);
-        frame.add(login);
+        JButton sign_in = new JButton("登        录");
+        sign_in.setFont(new Font("宋体", Font.BOLD, 15));
+        sign_in.setBounds(135, 250, 180, 40);
+        frame.add(sign_in);
 
         frame.setVisible(true);
     }
