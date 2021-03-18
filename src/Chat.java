@@ -9,11 +9,6 @@ public class Chat {
 
     boolean first = true;
 
-    public static void main(String[] args) {
-        Chat chat = new Chat();
-        chat.Open();
-    }
-
     public void Open() {
         JFrame chat_frame = new JFrame("∫√”—");
         chat_frame.setSize(800, 700);

@@ -199,6 +199,10 @@ public class Login {
         JButton sign_in = new JButton("µÇ        Â¼");
         sign_in.setFont(new Font("ËÎÌå", Font.BOLD, 15));
         sign_in.setBounds(135, 250, 180, 40);
+        sign_in.addActionListener(e -> {
+            new Chat().Open();
+            frame.dispose();
+        });
         frame.add(sign_in);
 
         frame.setVisible(true);
