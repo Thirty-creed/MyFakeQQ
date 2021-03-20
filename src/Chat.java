@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 public class Chat {
 
@@ -66,6 +63,8 @@ public class Chat {
         send_context_jta.addKeyListener(new KeyListener() {
             String str;
 
+            boolean press_ctrl = false;
+
             @Override
             public void keyTyped(KeyEvent e) {
 
@@ -73,16 +72,24 @@ public class Chat {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (!send_context_jta.getText().equals("")) {
-                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (!send_context_jta.getText().equals("") && !send_context_jta.getText().equals("\n")) {
                         if (first) {
                             first = false;
                             str = send_context_jta.getText();
                         } else {
-                            str = context_jta.getText() + "\n" + send_context_jta.getText();
+                            str = "\n" + send_context_jta.getText();
                         }
-                        context_jta.setText(str);
+                        context_jta.append(str);
                     }
+                    send_context_jta.setText("");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                    press_ctrl = true;
+                    System.out.println("press");
+                }
+                if (press_ctrl && e.getKeyCode() == KeyEvent.VK_V) {
+                    send_context_jta.setText("====");
                 }
             }
 
@@ -90,6 +97,10 @@ public class Chat {
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     send_context_jta.setText("");
+                }
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                    press_ctrl = false;
+                    System.out.println("release");
                 }
             }
         });
@@ -104,14 +115,17 @@ public class Chat {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!send_context_jta.getText().equals("")) {
+                    if (send_context_jta.getText().equals("\n")) {
+                        System.out.println("====");
+                    }
                     if (first) {
                         first = false;
                         str = send_context_jta.getText();
                     } else {
-                        str = context_jta.getText() + "\n" + send_context_jta.getText();
+                        str = "\n" + send_context_jta.getText();
                     }
                     send_context_jta.setText("");
-                    context_jta.setText(str);
+                    context_jta.append(str);
                 }
                 send_context_jta.requestFocus();
             }
