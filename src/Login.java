@@ -202,7 +202,7 @@ public class Login {
         sign_in.setFont(new Font("ËÎÌו", Font.BOLD, 15));
         sign_in.setBounds(135, 250, 180, 40);
         sign_in.addActionListener(e -> {
-            new Chat().Open();
+            new Client().UI();
             frame.dispose();
         });
         frame.add(sign_in);

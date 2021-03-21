@@ -22,7 +22,7 @@ public class Chat {
         chat_frame.setLayout(null);
         chat_frame.setResizable(false);
 //        chat.setUndecorated(true);
-        chat_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        chat_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //¶ÌÆÚÁÄÌì¼ÇÂ¼
         JPanel context = new JPanel();
