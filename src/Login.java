@@ -186,6 +186,7 @@ public class Login {
         sign_up.setFont(font);
         sign_up.setContentAreaFilled(false);
         sign_up.setBorderPainted(false);
+        sign_up.addActionListener(e -> {});
         frame.add(sign_up);
 
         JButton forget = new JButton("ÕÒ»ØÃÜÂë");
@@ -194,6 +195,7 @@ public class Login {
         forget.setFont(font);
         forget.setContentAreaFilled(false);
         forget.setBorderPainted(false);
+        forget.addActionListener(e -> {});
         frame.add(forget);
 
         JButton sign_in = new JButton("µÇ        Â¼");

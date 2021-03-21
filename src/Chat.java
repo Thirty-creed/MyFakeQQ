@@ -1,10 +1,19 @@
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.SimpleAttributeSet;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Chat {
 
-    boolean first = true;
+    SimpleDateFormat time_format;
+
+    {
+        time_format = new SimpleDateFormat(("MM-dd HH:mm:ss"));
+    }
 
     public void Open() {
         JFrame chat_frame = new JFrame("好友");
@@ -17,12 +26,12 @@ public class Chat {
 
         //短期聊天记录
         JPanel context = new JPanel();
-//        context.setBackground(Color.BLACK);
         context.setBounds(0, 0, 650, 480);
         context.setLayout(null);
         chat_frame.add(context);
 
-        JTextArea context_jta = new JTextArea();
+        JTextPane context_jta = new JTextPane();
+        Document doc = context_jta.getDocument();
         //聊天记录不可编辑
         context_jta.setEditable(false);
         context_jta.setOpaque(false);
@@ -51,19 +60,19 @@ public class Chat {
         send_context.setLayout(null);
         send_context.setBounds(0, 520, 650, 180);
 
-        //按钮要放置在JTexArea前，否则没效果(原因暂时未知)
+        //按钮要放置在JScrollPane前，否则没效果(原因暂时未知)
         JButton close = new JButton("关  闭");
         close.setBounds(490, 112, 80, 30);
         close.addActionListener(e -> System.exit(0));
         send_context.add(close);
 
-        JTextArea send_context_jta = new JTextArea();
+        JTextPane send_context_jta = new JTextPane();
         send_context_jta.setOpaque(false);
         //回车键发送消息
         send_context_jta.addKeyListener(new KeyListener() {
             String str;
-
             boolean press_ctrl = false;
+            boolean press_enter = false;
 
             @Override
             public void keyTyped(KeyEvent e) {
@@ -72,17 +81,20 @@ public class Chat {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (!press_enter && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (!send_context_jta.getText().equals("") && !send_context_jta.getText().equals("\n")) {
-                        if (first) {
-                            first = false;
-                            str = send_context_jta.getText();
-                        } else {
-                            str = "\n" + send_context_jta.getText();
+                        str = "                                              "
+                                + "                                           "
+                                + time_format.format(new Date()) + "\n"
+                                + send_context_jta.getText() + "\n";
+                        try {
+                            doc.insertString(doc.getLength(), str, new SimpleAttributeSet());
+                        } catch (BadLocationException ef) {
+                            ef.printStackTrace();
                         }
-                        context_jta.append(str);
                     }
                     send_context_jta.setText("");
+                    press_enter = true;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                     press_ctrl = true;
@@ -95,8 +107,9 @@ public class Chat {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (press_enter && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     send_context_jta.setText("");
+                    press_enter = false;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                     press_ctrl = false;
@@ -108,28 +121,30 @@ public class Chat {
         //发送消息按钮
         JButton send = new JButton("发  送");
         send.setBounds(570, 112, 79, 30);
-        send_context.add(send);
         send.addActionListener(new ActionListener() {
             String str;
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!send_context_jta.getText().equals("")) {
-                    if (send_context_jta.getText().equals("\n")) {
-                        System.out.println("====");
-                    }
-                    if (first) {
-                        first = false;
-                        str = send_context_jta.getText();
-                    } else {
-                        str = "\n" + send_context_jta.getText();
-                    }
+                    str = "                                              "
+                            + "                                           "
+                            + time_format.format(new Date()) + "\n"
+                            + send_context_jta.getText() + "\n";
                     send_context_jta.setText("");
-                    context_jta.append(str);
+                    try {
+                        //设置文字背景色
+//                        SimpleAttributeSet si=new SimpleAttributeSet();
+//                        StyleConstants.setBackground(si,Color.yellow);
+                        doc.insertString(doc.getLength(), str, new SimpleAttributeSet());
+                    } catch (BadLocationException ef) {
+                        ef.printStackTrace();
+                    }
                 }
                 send_context_jta.requestFocus();
             }
         });
+        send_context.add(send);
 
         JScrollPane send_context_jsp = new JScrollPane(send_context_jta);
         send_context_jsp.setOpaque(false);
@@ -139,6 +154,7 @@ public class Chat {
 
         chat_frame.add(send_context);
         chat_frame.setVisible(true);
+
         send_context_jta.requestFocus();
     }
 }
