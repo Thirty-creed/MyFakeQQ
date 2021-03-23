@@ -1,23 +1,14 @@
+package Display;
+
+import Function.OperationWithServer;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
@@ -30,13 +21,14 @@ public class Client {
     DefaultMutableTreeNode stranger = new DefaultMutableTreeNode("陌生人");
     DefaultMutableTreeNode blackname = new DefaultMutableTreeNode("黑名单");
     DefaultMutableTreeNode bl = new DefaultMutableTreeNode("朋友");
-    DefaultMutableTreeNode bl1 = new DefaultMutableTreeNode("朋友");
+
     JTree jtree = new JTree(root);
 
-//    public static void main(String[] args) {
-//        Client QQ = new Client();
-//        QQ.UI();
-//    }
+    OperationWithServer handler;
+
+    public Client(OperationWithServer handler) {
+        this.handler = handler;
+    }
 
     public void expandTree(JTree jtree) {
         TreeNode root = (TreeNode) jtree.getModel().getRoot();
@@ -49,13 +41,17 @@ public class Client {
         jtree.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()==2){
-                    DefaultMutableTreeNode treeNode=(DefaultMutableTreeNode)jtree.getLastSelectedPathComponent();
-                    if(treeNode.toString().equals("朋友")){
-                        new Chat().Open();
+                if (e.getClickCount() == 2) {
+                    //点击两次好友，弹出对话框
+                    DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) jtree.getLastSelectedPathComponent();
+                    if (treeNode.toString().equals("朋友")) {
+                        new Chat(handler).Open();
                     }
                 }
-
+                //右键点击好友
+                if (e.getButton() == MouseEvent.BUTTON3) {
+//                    System.out.println("===");
+                }
             }
 
             @Override
@@ -93,8 +89,8 @@ public class Client {
         jtree.setCellRenderer(new DefaultTreeCellRenderer() {
 
             // 收起和展开图片设置为三角形
-            ImageIcon icon1 = new ImageIcon("收起.png");
-            ImageIcon icon2 = new ImageIcon("展开.png");
+            final ImageIcon icon1 = new ImageIcon("收起.png");
+            final ImageIcon icon2 = new ImageIcon("展开.png");
 
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
                                                           boolean leaf, int row, boolean hasFocus) {
@@ -111,7 +107,7 @@ public class Client {
                 setBackgroundNonSelectionColor(new Color(255, 255, 255, 150));
                 setTextSelectionColor(Color.RED);
                 setTextNonSelectionColor(Color.BLACK);
-                setFont(new Font("宋体", 1, 20));
+                setFont(new Font("宋体", Font.BOLD, 20));
                 return this;
             }
 
@@ -129,21 +125,6 @@ public class Client {
     }
 
     public void UI() {
-
-//		JFrame.setDefaultLookAndFeelDecorated(true);
-//		try {
-////			UIManager.setLookAndFeel("com.birosoft.liquid.LiquidLookAndFeel");
-//			String lookAndFeel ="com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-//			UIManager.setLookAndFeel(lookAndFeel);
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		} catch (UnsupportedLookAndFeelException e) {
-//			e.printStackTrace();
-//		}
         JFrame jf = new JFrame();
         jf.setTitle("QQ界面");
         jf.setSize(350, 750);
@@ -152,7 +133,7 @@ public class Client {
         jf.setResizable(false);
         // 自定义布局
         jf.setLayout(null);
-        jf.setDefaultCloseOperation(3);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 背景图片
         JLabel back = new JLabel();
@@ -175,6 +156,34 @@ public class Client {
         head.setIcon(new ImageIcon(img));
         head.setBounds(15, 15, 100, 100);
         panel.add(head);
+        head.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    handler.Clink_ChangeInformation_Operation();
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         jf.setIconImage(img);
         // 呢称
         JLabel name = new JLabel("昵称");
@@ -183,14 +192,13 @@ public class Client {
         panel.add(name);
 
         // 在线状态
-        JComboBox box = new JComboBox();
-        box.addItem("在线");
-        box.addItem("离线");
-        box.addItem("隐身");
-        box.addItem("请勿打扰");
+        String[] item= new String[]{"在线", "离线", "隐身", "请勿打扰"};
+        var box = new JComboBox(item);
+
         box.setBounds(150, 45, 80, 20);
         box.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
+                handler.Clink_OnlineState_Operation();
                 System.out.println(e.getItem());
             }
         });
@@ -210,6 +218,7 @@ public class Client {
         // 添加好友功能
         JButton jbu = new JButton("添加好友");
         jbu.addActionListener(e -> {
+            handler.Clink_AddFriend_Operation();
 //				friend.add(bl1);
 //				jtree.updateUI();
         });

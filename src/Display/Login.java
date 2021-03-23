@@ -1,3 +1,7 @@
+package Display;
+
+import Function.OperationWithServer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -5,10 +9,17 @@ import java.awt.event.*;
 public class Login {
 
     private boolean Can_Drag = false;
+    private final OperationWithServer handler;
 
     public static void main(String[] args) {
-        Login login = new Login();
+        OperationWithServer handler = new OperationWithServer();
+        handler.connect();
+        Login login = new Login(handler);
         login.UI();
+    }
+
+    public Login(OperationWithServer handler) {
+        this.handler = handler;
     }
 
     public void UI() {
@@ -168,10 +179,10 @@ public class Login {
         password.setBounds(135, 160, 200, 30);
         frame.add(password);
 
-        JCheckBox auto_login = new JCheckBox("自动登录");
-        auto_login.setBounds(135, 200, 80, 20);
-        auto_login.setOpaque(false);
-        frame.add(auto_login);
+        JCheckBox auto_sign_in = new JCheckBox("自动登录");
+        auto_sign_in.setBounds(135, 200, 80, 20);
+        auto_sign_in.setOpaque(false);
+        frame.add(auto_sign_in);
 
         JCheckBox remember = new JCheckBox("记住密码");
         remember.setBounds(240, 200, 80, 20);
@@ -186,7 +197,7 @@ public class Login {
         sign_up.setFont(font);
         sign_up.setContentAreaFilled(false);
         sign_up.setBorderPainted(false);
-        sign_up.addActionListener(e -> {});
+        sign_up.addActionListener(e -> handler.Clink_Sign_Up_Operation());
         frame.add(sign_up);
 
         JButton forget = new JButton("找回密码");
@@ -195,18 +206,47 @@ public class Login {
         forget.setFont(font);
         forget.setContentAreaFilled(false);
         forget.setBorderPainted(false);
-        forget.addActionListener(e -> {});
+        forget.addActionListener(e -> handler.Clink_Forget_Operation());
         frame.add(forget);
 
         JButton sign_in = new JButton("登        录");
         sign_in.setFont(new Font("宋体", Font.BOLD, 15));
         sign_in.setBounds(135, 250, 180, 40);
         sign_in.addActionListener(e -> {
-            new Client().UI();
-            frame.dispose();
+            //判断是否合法
+            if (IsLegalLogin(account.getText(), password.getText())) {
+                handler.Clink_Sign_In_Operation();
+                frame.dispose();
+            } else {
+                //弹出提醒重新输入账号密码
+                System.out.println("验证失败");
+            }
         });
         frame.add(sign_in);
 
         frame.setVisible(true);
+        account.requestFocus();
+    }
+
+    /**
+     * 暂时只验证账号
+     *
+     * @param account  账号
+     * @param password 密码
+     * @return 账号密码是否合法
+     */
+    public boolean IsLegalLogin(String account, String password) {
+        if (account.equals("")) {
+            return false;
+        }
+        int n = account.length();
+        char[] ch;
+        ch = account.toCharArray();
+        for (int i = 0; i < n; i++) {
+            if (ch[i] < '0' || ch[i] > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 }
