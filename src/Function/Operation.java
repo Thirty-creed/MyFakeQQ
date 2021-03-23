@@ -36,5 +36,5 @@ public interface Operation {
     /**
      * µã»÷·¢ËÍÎÄ×Ö
      */
-    public void Clink_Send_Operation();
+    public void Clink_Send_Operation(char[] ch);
 }

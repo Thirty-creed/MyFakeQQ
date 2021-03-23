@@ -8,6 +8,8 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -152,7 +154,8 @@ public class Chat {
 //                send_context_jta.requestFocus();
 //            }
 //        });
-        send.addActionListener(e -> handler.Clink_Send_Operation());
+        char[] cha={'a','a','a','a','a'};
+        send.addActionListener(e -> handler.Clink_Send_Operation(cha));
         send_context.add(send);
 
         JScrollPane send_context_jsp = new JScrollPane(send_context_jtp);
@@ -165,5 +168,38 @@ public class Chat {
         chat_frame.setVisible(true);
 
         send_context_jtp.requestFocus();
+
+        new Thread(){
+            public void run(){
+                DataInputStream din=handler.getDin();
+
+                while (true){
+                    int action=0;
+                    try {
+                        action=din.readInt();
+                        System.out.println(action);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if(action==1){
+                        char[] ch=new char[5];
+                        for(int i=0;i<5;i++){
+                            try {
+                                ch[i]=din.readChar();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        String str=new String(ch);
+                        System.out.println(str);
+                        try {
+                            doc.insertString(doc.getLength(), "发来消息了", new SimpleAttributeSet());
+                        } catch (BadLocationException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }.start();
     }
 }
