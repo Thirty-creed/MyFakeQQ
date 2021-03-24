@@ -215,7 +215,8 @@ public class Login {
         sign_in.addActionListener(e -> {
             //判断是否合法
             if (IsLegalLogin(account.getText(), password.getText())) {
-                handler.Clink_Sign_In_Operation();
+                handler.Clink_Sign_In_Operation(account.getText(),password.getText());
+                System.out.println(account.getText());
                 frame.dispose();
             } else {
                 //弹出提醒重新输入账号密码

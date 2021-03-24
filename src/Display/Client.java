@@ -49,9 +49,9 @@ public class Client {
                     }
                 }
                 //ÓÒ¼üµã»÷ºÃÓÑ
-                if (e.getButton() == MouseEvent.BUTTON3) {
-//                    System.out.println("===");
-                }
+//                if (e.getButton() == MouseEvent.BUTTON3) {
+////                    System.out.println("===");
+//                }
             }
 
             @Override

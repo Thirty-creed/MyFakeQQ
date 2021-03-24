@@ -154,8 +154,7 @@ public class Chat {
 //                send_context_jta.requestFocus();
 //            }
 //        });
-        char[] cha={'a','a','a','a','a'};
-        send.addActionListener(e -> handler.Clink_Send_Operation(cha));
+        send.addActionListener(e -> handler.Clink_Send_Operation("123456"));//对方的账号为123456
         send_context.add(send);
 
         JScrollPane send_context_jsp = new JScrollPane(send_context_jtp);
@@ -174,29 +173,18 @@ public class Chat {
                 DataInputStream din=handler.getDin();
 
                 while (true){
-                    int action=0;
                     try {
-                        action=din.readInt();
-                        System.out.println(action);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if(action==1){
-                        char[] ch=new char[5];
-                        for(int i=0;i<5;i++){
+                        int action=din.readInt();
+                        if(action==21){
+                            String message= din.readUTF();
                             try {
-                                ch[i]=din.readChar();
-                            } catch (IOException e) {
+                                doc.insertString(doc.getLength(), message, new SimpleAttributeSet());
+                            } catch (BadLocationException e) {
                                 e.printStackTrace();
                             }
                         }
-                        String str=new String(ch);
-                        System.out.println(str);
-                        try {
-                            doc.insertString(doc.getLength(), "发来消息了", new SimpleAttributeSet());
-                        } catch (BadLocationException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }

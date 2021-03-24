@@ -9,7 +9,6 @@ public class OperationWithServer implements Operation {
 
     private DataInputStream din;
     private DataOutputStream dout;
-
     /**
      * 与服务器建立连接
      */
@@ -20,10 +19,6 @@ public class OperationWithServer implements Operation {
             OutputStream out = soc.getOutputStream();
             din = new DataInputStream(in);
             dout = new DataOutputStream(out);
-            dout.writeInt(1);
-            for (int i = 0; i < 5; i++) {
-                dout.writeChar('b');
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,9 +43,14 @@ public class OperationWithServer implements Operation {
     }
 
     @Override
-    public boolean Clink_Sign_In_Operation() {
+    public boolean Clink_Sign_In_Operation(String account,String password) {
         new Client(this).UI();
-
+        try {
+            dout.writeInt(1);
+            dout.writeUTF(account);//写入字符串
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -70,18 +70,12 @@ public class OperationWithServer implements Operation {
     }
 
     @Override
-    public void Clink_Send_Operation(char[] ch) {
+    public void Clink_Send_Operation(String receiver) {
         try {
             dout.writeInt(2);
+            dout.writeUTF(receiver);//写入字符串，receiver为接收方
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        for (int i=0;i<5;i++){
-            try {
-                dout.writeChar(ch[i]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

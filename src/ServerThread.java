@@ -7,13 +7,14 @@ public class ServerThread extends Thread {
     private Socket socket;
     private DataInputStream din;
     private DataOutputStream dout;
+    private String account;
     private HashMap<String, DataInputStream> DataInputHashMap;
     private HashMap<String, DataOutputStream> DataOutHashMap;
 
     /**
      * @param socket
-     * @param DataInputHashMap 存放连接上服务器的客户端的输入字节流（根据客户端的代号String）
-     * @param DataOutHashMap   存放连接上服务器的客户端的输出字节流（根据客户端的代号String）
+     * @param DataInputHashMap 存放连接上服务器的客户端的输入字节流（根据账号存储）
+     * @param DataOutHashMap   存放连接上服务器的客户端的输出字节流（根据账号存储）
      */
     public ServerThread(Socket socket, HashMap<String, DataInputStream> DataInputHashMap, HashMap<String, DataOutputStream> DataOutHashMap) {
         this.socket = socket;
@@ -31,52 +32,32 @@ public class ServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         while (true) {
-            char[] ch1 = new char[5];
             int action = 0;
             try {
                 action = din.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //1表示建立连接，将字节输入输出流添加到HashMap（根据String）
+            //1表示建立连接，将字节输入输出流添加到HashMap（根据客户端的代号number转成Integer）
             if (action == 1) {
-                ch1 = new char[5];
-                for (int i = 0; i < 5; i++) {
-                    try {
-                        ch1[i] = din.readChar();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                String str = new String(ch1);
-                System.out.println(str);
-                DataInputHashMap.put(str, din);
-                DataOutHashMap.put(str, dout);
-                System.out.println("字节流传入成功");
-            } else if (action == 2) {
-                char[] ch=new char[5];
-                for(int i=0;i<5;i++){
-                    try {
-                        ch[i]=din.readChar();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                String str=new String(ch);
-                System.out.println(str+"======");
-                DataOutputStream other_out=DataOutHashMap.get(str);
                 try {
-                    other_out.writeInt(1);
-                    for(int i=0;i<5;i++){
-                        try {
-                            other_out.writeChar(ch1[i]);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    account=din.readUTF();//读取字符串
+                    System.out.println(account);
+                    DataInputHashMap.put(account, din);
+                    DataOutHashMap.put(account, dout);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("字节流绑定账号成功");
+            } else if (action == 2) {
+                try {
+                    String receiver=din.readUTF();//读取字符串
+                    DataOutputStream message_to=DataOutHashMap.get(receiver);
+                    String str=account+"发来消息了";
+                    message_to.writeInt(21);//21表示发送消息
+                    message_to.writeUTF(str);//写入字符串
+                    System.out.println("发送成功");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

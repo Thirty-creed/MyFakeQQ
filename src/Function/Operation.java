@@ -15,7 +15,7 @@ public interface Operation {
     /**
      * 点击登录后的与服务器进行交互,如果登录成功返回ture
      */
-    public boolean Clink_Sign_In_Operation();
+    public boolean Clink_Sign_In_Operation(String account,String password);
 
 
     /**
@@ -36,5 +36,5 @@ public interface Operation {
     /**
      * 点击发送文字
      */
-    public void Clink_Send_Operation(char[] ch);
+    public void Clink_Send_Operation(String receiver);
 }
