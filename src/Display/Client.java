@@ -1,6 +1,6 @@
 package Display;
 
-import Function.OperationWithServer;
+import Function.InteractWithServer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,112 +16,17 @@ import javax.swing.tree.TreePath;
 
 public class Client {
 
-    DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-    DefaultMutableTreeNode friend = new DefaultMutableTreeNode("我的好友");
-    DefaultMutableTreeNode stranger = new DefaultMutableTreeNode("陌生人");
-    DefaultMutableTreeNode blackname = new DefaultMutableTreeNode("黑名单");
-    DefaultMutableTreeNode bl = new DefaultMutableTreeNode("朋友");
+    private final DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+    private final DefaultMutableTreeNode friend = new DefaultMutableTreeNode("我的好友");
+    private final DefaultMutableTreeNode stranger = new DefaultMutableTreeNode("陌生人");
+    private final DefaultMutableTreeNode blacklist = new DefaultMutableTreeNode("黑名单");
+    private JTree contacts_tree = new JTree(root);
+    private PeopleNode friend_one = new PeopleNode("123456", "朋友", "路在脚下", new ImageIcon("好友.png"));
 
-    JTree jtree = new JTree(root);
+    private final InteractWithServer handler;
 
-    OperationWithServer handler;
-
-    public Client(OperationWithServer handler) {
+    public Client(InteractWithServer handler) {
         this.handler = handler;
-    }
-
-    public void expandTree(JTree jtree) {
-        TreeNode root = (TreeNode) jtree.getModel().getRoot();
-        jtree.expandPath(new TreePath(root));
-    }
-
-    public JTree setContactsTree() {
-        // 点击一次展开
-        jtree.setToggleClickCount(1);
-        jtree.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    //点击两次好友，弹出对话框
-                    DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) jtree.getLastSelectedPathComponent();
-                    if (treeNode.toString().equals("朋友")) {
-                        new Chat(handler).Open();
-                    }
-                }
-                //右键点击好友
-//                if (e.getButton() == MouseEvent.BUTTON3) {
-////                    System.out.println("===");
-//                }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-        root.add(friend);
-        friend.add(bl);
-        root.add(stranger);
-        root.add(blackname);
-        // 隐藏根节点
-        jtree.setRootVisible(false);
-        // 展开树
-        expandTree(jtree);
-        // 设置透明
-        jtree.setOpaque(false);
-        // 隐藏根柄
-        jtree.setShowsRootHandles(false);
-        jtree.setCellRenderer(new DefaultTreeCellRenderer() {
-
-            // 收起和展开图片设置为三角形
-            final ImageIcon icon1 = new ImageIcon("收起.png");
-            final ImageIcon icon2 = new ImageIcon("展开.png");
-
-            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
-                                                          boolean leaf, int row, boolean hasFocus) {
-                super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-                if (!expanded) {
-                    setIcon(icon1);
-                } else {
-                    setIcon(icon2);
-                }
-                String str = value.toString();
-                if (!str.equals("我的好友") && !str.equals("黑名单") && !str.equals("陌生人")) {
-                    setIcon(new ImageIcon("好友.png"));
-                }
-                setBackgroundNonSelectionColor(new Color(255, 255, 255, 150));
-                setTextSelectionColor(Color.RED);
-                setTextNonSelectionColor(Color.BLACK);
-                setFont(new Font("宋体", Font.BOLD, 20));
-                return this;
-            }
-
-        });
-        return jtree;
-    }
-
-    public void AddJSPane(JTabbedPane table, JScrollPane jsp, String str) {
-        jsp.getViewport().setOpaque(false);
-        jsp.setOpaque(false);
-        jsp.setName(str);
-        // 显示滚动条
-        jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        table.add(jsp);
     }
 
     public void UI() {
@@ -156,7 +61,8 @@ public class Client {
         head.setIcon(new ImageIcon(img));
         head.setBounds(15, 15, 100, 100);
         panel.add(head);
-        head.addMouseListener(new MouseListener() {
+        head.addMouseListener(new MouseAdapter() {
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -164,27 +70,9 @@ public class Client {
                 }
             }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
         });
         jf.setIconImage(img);
+
         // 呢称
         JLabel name = new JLabel("昵称");
         name.setForeground(Color.YELLOW);
@@ -192,9 +80,8 @@ public class Client {
         panel.add(name);
 
         // 在线状态
-        String[] item= new String[]{"在线", "离线", "隐身", "请勿打扰"};
+        String[] item = new String[]{"在线", "离线", "隐身", "请勿打扰"};
         var box = new JComboBox(item);
-
         box.setBounds(150, 45, 80, 20);
         box.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -220,7 +107,7 @@ public class Client {
         jbu.addActionListener(e -> {
             handler.Clink_AddFriend_Operation();
 //				friend.add(bl1);
-//				jtree.updateUI();
+//				updateUI();
         });
         jbu.setBounds(240, 135, 90, 30);
         jbu.setOpaque(false);
@@ -229,19 +116,116 @@ public class Client {
         // 设置选项卡透明（需放置在创建之前）
         UIManager.put("TabbedPane.contentOpaque", false);
         // 创建选项卡
-        JTabbedPane table = new JTabbedPane();
+        JTabbedPane tab = new JTabbedPane();
         // 创建滚动面板
         JScrollPane jsp1 = new JScrollPane(setContactsTree());
-        AddJSPane(table, jsp1, "联系人");
+        this.AddJSPaneToTab(tab, jsp1, "联系人");
 
-        JScrollPane jsp2 = new JScrollPane();
-        AddJSPane(table, jsp2, "群组");
+        JScrollPane jsp2 = new JScrollPane(SetGroupTree());
+        this.AddJSPaneToTab(tab, jsp2, "群组");
 
-        table.setBounds(0, 180, 330, 500);
+        tab.setBounds(0, 180, 330, 500);
 
-        panel.add(table);
+        panel.add(tab);
 
         jf.setVisible(true);
 
     }
+
+    // 使节点展开
+    public void expandTree(JTree jtree) {
+        TreeNode root = (TreeNode) jtree.getModel().getRoot();
+        jtree.expandPath(new TreePath(root));
+    }
+
+    // 对联系人的树进行属性和功能设置
+    public JTree setContactsTree() {
+        // 点击一次展开
+        contacts_tree.setToggleClickCount(1);
+        root.add(friend);
+        root.add(stranger);
+        root.add(blacklist);
+        friend.add(friend_one);
+        // 隐藏根节点
+        contacts_tree.setRootVisible(false);
+        // 展开树
+        this.expandTree(contacts_tree);
+        // 设置透明
+        contacts_tree.setOpaque(false);
+        // 隐藏根柄
+        contacts_tree.setShowsRootHandles(false);
+        // 对各个节点进行个性化设置
+        contacts_tree.setCellRenderer(new DefaultTreeCellRenderer() {
+
+            // 收起和展开图片设置为三角形
+            final ImageIcon icon1 = new ImageIcon("收起.png");
+            final ImageIcon icon2 = new ImageIcon("展开.png");
+
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                                                          boolean leaf, int row, boolean hasFocus) {
+                super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+
+                if (!expanded) {
+                    setIcon(icon1);
+                } else {
+                    setIcon(icon2);
+                }
+
+                String str = value.toString();
+                if (!str.equals("我的好友") && !str.equals("黑名单") && !str.equals("陌生人")) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                    PeopleNode people = (PeopleNode) node;
+                    setIcon(people.getImageIcon());
+                    setFont(new Font("宋体", Font.BOLD, 15));
+                } else {
+                    setFont(new Font("宋体", Font.BOLD, 20));
+                }
+
+                setBackgroundNonSelectionColor(new Color(255, 255, 255, 175));
+                setBackgroundSelectionColor(new Color(255, 255, 255, 175));
+                setTextSelectionColor(Color.RED);
+                setTextNonSelectionColor(Color.BLACK);
+
+                return this;
+            }
+
+        });
+
+        // 使节点能响应相应操作
+        contacts_tree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Object node = contacts_tree.getLastSelectedPathComponent();
+                String str = node.toString();
+                if (!str.equals("我的好友") && !str.equals("黑名单") && !str.equals("陌生人") && e.getClickCount() == 2) {
+                    //点击两次好友，弹出对话框
+                    PeopleNode treeNode = (PeopleNode) node;
+                    if (treeNode.getName().equals("朋友")) {
+                        new Chat(handler).Open(treeNode.getAccount());
+                    }
+
+                }
+            }
+
+        });
+
+        return contacts_tree;
+    }
+
+    //群组的树，暂时未编辑
+    public JTree SetGroupTree() {
+        return new JTree();
+    }
+
+    // 将滚动面板添加的选项卡里
+    public void AddJSPaneToTab(JTabbedPane tab, JScrollPane jsp, String str) {
+        // 将滚动面板设置透明
+        jsp.getViewport().setOpaque(false);
+        jsp.setOpaque(false);
+        jsp.setName(str);
+        // 显示滚动条
+        jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        tab.add(jsp);
+    }
+
 }

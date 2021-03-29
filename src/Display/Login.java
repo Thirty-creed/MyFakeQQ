@@ -1,6 +1,6 @@
 package Display;
 
-import Function.OperationWithServer;
+import Function.InteractWithServer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,17 +9,11 @@ import java.awt.event.*;
 public class Login {
 
     private boolean Can_Drag = false;
-    private final OperationWithServer handler;
+    private final InteractWithServer handler = new InteractWithServer();
 
     public static void main(String[] args) {
-        OperationWithServer handler = new OperationWithServer();
-        handler.connect();
-        Login login = new Login(handler);
+        Login login = new Login();
         login.UI();
-    }
-
-    public Login(OperationWithServer handler) {
-        this.handler = handler;
     }
 
     public void UI() {
@@ -44,34 +38,16 @@ public class Login {
         panel.setOpaque(false);
 
         // 设置窗体拖动效果
-        background.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
+        background.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 Can_Drag = false;
             }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
         });
 
-        background.addMouseMotionListener(new MouseMotionListener() {
+        background.addMouseMotionListener(new MouseMotionAdapter() {
             int StartX, StartY, EndX, EndY;
 
             @Override
@@ -86,10 +62,6 @@ public class Login {
                 frame.setLocation(frame.getX() + EndX - StartX, frame.getY() + EndY - StartY);
             }
 
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
         });
 
         JButton minimize = new JButton(new ImageIcon("最小化.png"));
@@ -98,21 +70,11 @@ public class Login {
         //将按钮设置为无边框
         minimize.setBorderPainted(false);
         minimize.setBounds(390, 0, 30, 30);
-        minimize.addMouseListener(new MouseListener() {
+        minimize.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //最小化窗口
                 frame.setExtendedState(1);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
             }
 
             @Override
@@ -135,21 +97,11 @@ public class Login {
         //将按钮设置为无边框
         close.setBorderPainted(false);
         close.setBounds(420, 0, 30, 30);
-        close.addMouseListener(new MouseListener() {
+        close.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 //关闭窗口
                 System.exit(0);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
             }
 
             @Override
@@ -215,7 +167,7 @@ public class Login {
         sign_in.addActionListener(e -> {
             //判断是否合法
             if (IsLegalLogin(account.getText(), password.getText())) {
-                handler.Clink_Sign_In_Operation(account.getText(),password.getText());
+                handler.Clink_Sign_In_Operation(account.getText(), password.getText());
                 System.out.println(account.getText());
                 frame.dispose();
             } else {

@@ -39,10 +39,10 @@ public class ServerThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //1表示建立连接，将字节输入输出流添加到HashMap（根据客户端的代号number转成Integer）
+            //1表示建立连接，将字节输入输出流添加到HashMap（根据账号存储）
             if (action == 1) {
                 try {
-                    account=din.readUTF();//读取字符串
+                    account = din.readUTF();//读取字符串
                     System.out.println(account);
                     DataInputHashMap.put(account, din);
                     DataOutHashMap.put(account, dout);
@@ -52,9 +52,9 @@ public class ServerThread extends Thread {
                 System.out.println("字节流绑定账号成功");
             } else if (action == 2) {
                 try {
-                    String receiver=din.readUTF();//读取字符串
-                    DataOutputStream message_to=DataOutHashMap.get(receiver);
-                    String str=account+"发来消息了";
+                    String receiver = din.readUTF();//读取字符串
+                    DataOutputStream message_to = DataOutHashMap.get(receiver);
+                    String str = account + "发来消息了";
                     message_to.writeInt(21);//21表示发送消息
                     message_to.writeUTF(str);//写入字符串
                     System.out.println("发送成功");

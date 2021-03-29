@@ -15,8 +15,7 @@ public interface Operation {
     /**
      * 点击登录后的与服务器进行交互,如果登录成功返回ture
      */
-    public boolean Clink_Sign_In_Operation(String account,String password);
-
+    public boolean Clink_Sign_In_Operation(String account, String password);
 
     /**
      * 修改个人信息

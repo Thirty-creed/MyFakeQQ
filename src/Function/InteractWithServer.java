@@ -5,22 +5,29 @@ import Display.Client;
 import java.io.*;
 import java.net.Socket;
 
-public class OperationWithServer implements Operation {
+public class InteractWithServer implements Operation {
 
     private DataInputStream din;
     private DataOutputStream dout;
+    private boolean IsConnected = false;
+
     /**
      * 与服务器建立连接
      */
     public void connect() {
-        try {
-            Socket soc = new Socket("127.0.0.1", 8800);
-            InputStream in = soc.getInputStream();
-            OutputStream out = soc.getOutputStream();
-            din = new DataInputStream(in);
-            dout = new DataOutputStream(out);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!IsConnected) {
+            try {
+                Socket soc = new Socket("127.0.0.1", 8800);
+                InputStream in = soc.getInputStream();
+                OutputStream out = soc.getOutputStream();
+                din = new DataInputStream(in);
+                dout = new DataOutputStream(out);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            IsConnected = true;
+        } else {
+            System.out.println("连接已建立！");
         }
     }
 
@@ -43,14 +50,20 @@ public class OperationWithServer implements Operation {
     }
 
     @Override
-    public boolean Clink_Sign_In_Operation(String account,String password) {
-        new Client(this).UI();
+    public boolean Clink_Sign_In_Operation(String account, String password) {
+        if (!IsConnected) {
+            connect();
+        }
+
         try {
             dout.writeInt(1);
             dout.writeUTF(account);//写入字符串
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        new Client(this).UI();
+
         return true;
     }
 

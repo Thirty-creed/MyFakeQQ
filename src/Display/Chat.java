@@ -1,6 +1,6 @@
 package Display;
 
-import Function.OperationWithServer;
+import Function.InteractWithServer;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -21,13 +21,13 @@ public class Chat {
         time_format = new SimpleDateFormat(("MM-dd HH:mm:ss"));
     }
 
-    private final OperationWithServer handler;
+    private final InteractWithServer handler;
 
-    public Chat(OperationWithServer handler) {
+    public Chat(InteractWithServer handler) {
         this.handler = handler;
     }
 
-    public void Open() {
+    public void Open(String Opposite_account) {
         JFrame chat_frame = new JFrame("好友");
         chat_frame.setSize(800, 700);
         chat_frame.setLocationRelativeTo(null);
@@ -79,15 +79,10 @@ public class Chat {
         JTextPane send_context_jtp = new JTextPane();
         send_context_jtp.setOpaque(false);
         //回车键发送消息
-        send_context_jtp.addKeyListener(new KeyListener() {
+        send_context_jtp.addKeyListener(new KeyAdapter() {
             String str;
             boolean press_ctrl = false;
             boolean press_enter = false;
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -131,30 +126,7 @@ public class Chat {
         //发送消息按钮
         JButton send = new JButton("发  送");
         send.setBounds(570, 112, 79, 30);
-//        send.addActionListener(new ActionListener() {
-//            String str;
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                if (!send_context_jta.getText().equals("")) {
-//                    str = "                                              "
-//                            + "                                           "
-//                            + time_format.format(new Date()) + "\n"
-//                            + send_context_jta.getText() + "\n";
-//                    send_context_jta.setText("");
-//                    try {
-//                        //设置文字背景色
-////                        SimpleAttributeSet si=new SimpleAttributeSet();
-////                        StyleConstants.setBackground(si,Color.yellow);
-//                        doc.insertString(doc.getLength(), str, new SimpleAttributeSet());
-//                    } catch (BadLocationException ef) {
-//                        ef.printStackTrace();
-//                    }
-//                }
-//                send_context_jta.requestFocus();
-//            }
-//        });
-        send.addActionListener(e -> handler.Clink_Send_Operation("123456"));//对方的账号为123456
+        send.addActionListener(e -> handler.Clink_Send_Operation(Opposite_account));//对方的账号为123456
         send_context.add(send);
 
         JScrollPane send_context_jsp = new JScrollPane(send_context_jtp);
@@ -168,15 +140,15 @@ public class Chat {
 
         send_context_jtp.requestFocus();
 
-        new Thread(){
-            public void run(){
-                DataInputStream din=handler.getDin();
+        new Thread() {
+            public void run() {
+                DataInputStream din = handler.getDin();
 
-                while (true){
+                while (true) {
                     try {
-                        int action=din.readInt();
-                        if(action==21){
-                            String message= din.readUTF();
+                        int action = din.readInt();
+                        if (action == 21) {
+                            String message = din.readUTF();
                             try {
                                 doc.insertString(doc.getLength(), message, new SimpleAttributeSet());
                             } catch (BadLocationException e) {
