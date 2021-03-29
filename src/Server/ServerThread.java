@@ -3,6 +3,7 @@ package Server;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ServerThread extends Thread {
 
@@ -45,7 +46,7 @@ public class ServerThread extends Thread {
             if (action == 1) {
                 try {
                     account = din.readUTF();//读取字符串
-                    System.out.println(account);
+                    System.out.println("账号 "+account+" 建立连接");
                     DataInputHashMap.put(account, din);
                     DataOutHashMap.put(account, dout);
                 } catch (IOException e) {
@@ -56,9 +57,9 @@ public class ServerThread extends Thread {
                 try {
                     String receiver = din.readUTF();//读取字符串
                     DataOutputStream message_to = DataOutHashMap.get(receiver);
-                    String str = account + "发来消息了";
+                    String message= din.readUTF();
                     message_to.writeInt(21);//21表示发送消息
-                    message_to.writeUTF(str);//写入字符串
+                    message_to.writeUTF(message);//写入字符串
                     System.out.println("发送成功");
                 } catch (IOException e) {
                     e.printStackTrace();

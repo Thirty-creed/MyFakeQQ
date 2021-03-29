@@ -83,10 +83,11 @@ public class InteractWithServer implements Operation {
     }
 
     @Override
-    public void Clink_Send_Operation(String receiver) {
+    public void Clink_Send_Operation(String receiver,String message) {
         try {
             dout.writeInt(2);
             dout.writeUTF(receiver);//写入字符串，receiver为接收方
+            dout.writeUTF(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

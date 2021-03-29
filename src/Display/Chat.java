@@ -126,7 +126,7 @@ public class Chat {
         //发送消息按钮
         JButton send = new JButton("发  送");
         send.setBounds(570, 112, 79, 30);
-        send.addActionListener(e -> handler.Clink_Send_Operation(Opposite_account));//对方的账号为123456
+        send.addActionListener(e -> handler.Clink_Send_Operation(Opposite_account,"Hello!"));//对方的账号为123456
         send_context.add(send);
 
         JScrollPane send_context_jsp = new JScrollPane(send_context_jtp);
@@ -150,7 +150,7 @@ public class Chat {
                         if (action == 21) {
                             String message = din.readUTF();
                             try {
-                                doc.insertString(doc.getLength(), message, new SimpleAttributeSet());
+                                doc.insertString(doc.getLength(), Opposite_account+":"+message, new SimpleAttributeSet());
                             } catch (BadLocationException e) {
                                 e.printStackTrace();
                             }
