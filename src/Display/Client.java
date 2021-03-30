@@ -25,15 +25,15 @@ public class Client {
     private JTree contacts_tree = new JTree(root);
 
     private ArrayList<PeopleNode> people_list;
-    private ConcurrentHashMap<String,PeopleNode> peopleMap=new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, PeopleNode> peopleMap = new ConcurrentHashMap<>();
 
     private ConcurrentHashMap<String, Chat> chatMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, String> messageMap = new ConcurrentHashMap<>();
     private final InteractWithServer handler;
 
-    public Client(InteractWithServer handler,ArrayList<PeopleNode> people_list) {
+    public Client(InteractWithServer handler, ArrayList<PeopleNode> people_list) {
         this.handler = handler;
-        this.people_list=people_list;
+        this.people_list = people_list;
     }
 
     public void UI() {
@@ -113,8 +113,6 @@ public class Client {
         JButton jbu = new JButton("添加好友");
         jbu.addActionListener(e -> {
             handler.Clink_AddFriend_Operation();
-//				friend.add(bl1);
-//				updateUI();
         });
         jbu.setBounds(240, 135, 90, 30);
         jbu.setOpaque(false);
@@ -159,12 +157,12 @@ public class Client {
         root.add(friend);
         root.add(stranger);
         root.add(blacklist);
-        for(int i=0;i<people_list.size();i++){
-            PeopleNode node=people_list.get(i);
-            if(node.getKind().equals("我的好友")){
+        for (int i = 0; i < people_list.size(); i++) {
+            PeopleNode node = people_list.get(i);
+            if (node.getKind().equals("我的好友")) {
                 friend.add(node);
             }
-            peopleMap.put(node.getAccount(),node);
+            peopleMap.put(node.getAccount(), node);
         }
         // 隐藏根节点
         contacts_tree.setRootVisible(false);
@@ -220,11 +218,9 @@ public class Client {
                 if (!str.equals("我的好友") && !str.equals("黑名单") && !str.equals("陌生人") && e.getClickCount() == 2) {
                     //点击两次好友，弹出对话框
                     PeopleNode people = (PeopleNode) node;
-                    if (people.getName().equals("朋友")) {
-                        Chat chat = new Chat(handler, people.getAccount());
-                        chat.Open();
-                        chatMap.put(people.getAccount(), chat);
-                    }
+                    Chat chat = new Chat(handler, people.getAccount());
+                    chat.Open();
+                    chatMap.put(people.getAccount(), chat);
 
                 }
             }

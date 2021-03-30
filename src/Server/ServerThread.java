@@ -54,29 +54,24 @@ public class ServerThread extends Thread {
                     System.out.println("账号 " + account + " 建立连接");
                     DataInputHashMap.put(account, din);
                     DataOutHashMap.put(account, dout);
+                    System.out.println("字节流绑定账号成功");
                     try {
-                        ResultSet re=statement.executeQuery("select *from everyone where name='库里'");
+                        ResultSet re=statement.executeQuery("select *from friendship where me="+account);
                         while (re.next()){
-                            dout.writeUTF(re.getString("account"));
-
-                            dout.writeUTF(re.getString("name"));
+                            String kind=re.getString("kind");
+                            dout.writeUTF(kind);
+                            String friend_account=re.getString("friend");
+                            dout.writeUTF(friend_account);
+                            ResultSet re1=statement.executeQuery("select *from everyone where account="+friend_account);
+                            while (re1.next()){
+                                String name=re1.getString("name");
+                                dout.writeUTF(name);
+                            }
                         }
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("字节流绑定账号成功");
-            } else if (action == 2) {
-                try {
-                    String receiver = din.readUTF();//读取字符串
-                    DataOutputStream message_to = DataOutHashMap.get(receiver);
-                    String message = din.readUTF();
-                    message_to.writeInt(21);//21表示发送消息
-                    message_to.writeUTF(message);//写入字符串
-                    System.out.println("发送成功");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
