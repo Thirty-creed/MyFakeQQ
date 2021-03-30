@@ -35,5 +35,5 @@ public interface Operation {
     /**
      * µã»÷·¢ËÍÎÄ×Ö
      */
-    public void Clink_Send_Operation(String receiver,String message);
+    public void Clink_Send_Operation(String receiver, String message);
 }

@@ -168,7 +168,7 @@ public class Login {
             //判断是否合法
             if (IsLegalLogin(account.getText(), password.getText())) {
                 handler.Clink_Sign_In_Operation(account.getText(), password.getText());
-                System.out.println(account.getText());
+                System.out.println("登录的账号为"+account.getText());
                 frame.dispose();
             } else {
                 //弹出提醒重新输入账号密码

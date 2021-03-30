@@ -8,8 +8,6 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,12 +20,17 @@ public class Chat {
     }
 
     private final InteractWithServer handler;
+    private JTextPane context_jtp;
+    private Document doc;
+    private String Opposite_account;
 
-    public Chat(InteractWithServer handler) {
+    public Chat(InteractWithServer handler, String Opposite_account) {
         this.handler = handler;
+        this.Opposite_account = Opposite_account;
+
     }
 
-    public void Open(String Opposite_account) {
+    public void Open() {
         JFrame chat_frame = new JFrame("好友");
         chat_frame.setSize(800, 700);
         chat_frame.setLocationRelativeTo(null);
@@ -40,8 +43,9 @@ public class Chat {
         context.setLayout(null);
         chat_frame.add(context);
 
-        JTextPane context_jtp = new JTextPane();
-        Document doc = context_jtp.getDocument();
+        context_jtp = new JTextPane();
+        //得到短期聊天记录的Document
+        doc = context_jtp.getDocument();
         //聊天记录不可编辑
         context_jtp.setEditable(false);
         context_jtp.setOpaque(false);
@@ -126,7 +130,7 @@ public class Chat {
         //发送消息按钮
         JButton send = new JButton("发  送");
         send.setBounds(570, 112, 79, 30);
-        send.addActionListener(e -> handler.Clink_Send_Operation(Opposite_account,"Hello!"));//对方的账号为123456
+        send.addActionListener(e -> handler.Clink_Send_Operation(Opposite_account, "Hello!"));
         send_context.add(send);
 
         JScrollPane send_context_jsp = new JScrollPane(send_context_jtp);
@@ -140,26 +144,5 @@ public class Chat {
 
         send_context_jtp.requestFocus();
 
-        new Thread() {
-            public void run() {
-                DataInputStream din = handler.getDin();
-
-                while (true) {
-                    try {
-                        int action = din.readInt();
-                        if (action == 21) {
-                            String message = din.readUTF();
-                            try {
-                                doc.insertString(doc.getLength(), Opposite_account+":"+message, new SimpleAttributeSet());
-                            } catch (BadLocationException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
     }
 }

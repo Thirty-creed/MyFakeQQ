@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -21,12 +23,17 @@ public class Client {
     private final DefaultMutableTreeNode stranger = new DefaultMutableTreeNode("陌生人");
     private final DefaultMutableTreeNode blacklist = new DefaultMutableTreeNode("黑名单");
     private JTree contacts_tree = new JTree(root);
-    private PeopleNode friend_one = new PeopleNode("123456", "朋友", "路在脚下", new ImageIcon("好友.png"));
 
+    private ArrayList<PeopleNode> people_list;
+    private ConcurrentHashMap<String,PeopleNode> peopleMap=new ConcurrentHashMap<>();
+
+    private ConcurrentHashMap<String, Chat> chatMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, String> messageMap = new ConcurrentHashMap<>();
     private final InteractWithServer handler;
 
-    public Client(InteractWithServer handler) {
+    public Client(InteractWithServer handler,ArrayList<PeopleNode> people_list) {
         this.handler = handler;
+        this.people_list=people_list;
     }
 
     public void UI() {
@@ -130,6 +137,13 @@ public class Client {
 
         jf.setVisible(true);
 
+        // 处理服务器发来的消息
+        new Thread() {
+            @Override
+            public void run() {
+
+            }
+        }.start();
     }
 
     // 使节点展开
@@ -145,7 +159,13 @@ public class Client {
         root.add(friend);
         root.add(stranger);
         root.add(blacklist);
-        friend.add(friend_one);
+        for(int i=0;i<people_list.size();i++){
+            PeopleNode node=people_list.get(i);
+            if(node.getKind().equals("我的好友")){
+                friend.add(node);
+            }
+            peopleMap.put(node.getAccount(),node);
+        }
         // 隐藏根节点
         contacts_tree.setRootVisible(false);
         // 展开树
@@ -199,9 +219,11 @@ public class Client {
                 String str = node.toString();
                 if (!str.equals("我的好友") && !str.equals("黑名单") && !str.equals("陌生人") && e.getClickCount() == 2) {
                     //点击两次好友，弹出对话框
-                    PeopleNode treeNode = (PeopleNode) node;
-                    if (treeNode.getName().equals("朋友")) {
-                        new Chat(handler).Open(treeNode.getAccount());
+                    PeopleNode people = (PeopleNode) node;
+                    if (people.getName().equals("朋友")) {
+                        Chat chat = new Chat(handler, people.getAccount());
+                        chat.Open();
+                        chatMap.put(people.getAccount(), chat);
                     }
 
                 }
