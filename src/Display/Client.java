@@ -85,8 +85,7 @@ public class Client {
 
         // 呢称
         JLabel name = new JLabel(myself.getName());
-        name.setForeground(Color.YELLOW);
-        name.setBounds(150, 15, 60, 30);
+        name.setBounds(150, 15, 100, 30);
         panel.add(name);
 
         // 在线状态
@@ -103,7 +102,6 @@ public class Client {
 
         // 个性签名
         JLabel says = new JLabel(myself.getSays());
-        says.setForeground(Color.YELLOW);
         says.setBounds(150, 70, 100, 30);
         panel.add(says);
 
@@ -203,9 +201,9 @@ public class Client {
                     setFont(new Font("宋体", Font.BOLD, 20));
                 }
 
-                setBackgroundNonSelectionColor(new Color(255, 255, 255, 175));
-                setBackgroundSelectionColor(new Color(255, 255, 255, 175));
-                setTextSelectionColor(Color.RED);
+                setOpaque(false);
+                setBackgroundNonSelectionColor(new Color(255, 255, 255, 0));
+                setBackgroundSelectionColor(new Color(255, 255, 255, 100));
                 setTextNonSelectionColor(Color.BLACK);
 
                 return this;

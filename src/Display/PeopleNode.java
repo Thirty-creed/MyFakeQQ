@@ -14,7 +14,7 @@ public class PeopleNode extends DefaultMutableTreeNode {
     private boolean OnLineState = false;
 
     public PeopleNode(String kind, String account, String name, String says, int head) {
-        super(name+"                 ");
+        super(name+"          ");
         this.kind = kind;
         this.account = account;
         this.name = name;
