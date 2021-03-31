@@ -61,18 +61,35 @@ public class InteractWithServer implements Operation {
         try {
             dout.writeInt(1);
             dout.writeUTF(account);//写入字符串
-            String kind = din.readUTF();
-            System.out.println("好友类型：" + kind);
-            String opposite_account = din.readUTF();
-            System.out.println("对方账号为：" + opposite_account);
-            String opposite_name = din.readUTF();
-            System.out.println("对方昵称为：" + opposite_name);
-            people_list.add(new PeopleNode(kind, opposite_account, opposite_name, null, null));
+            int result = din.readInt();
+            if (result == 1) {
+                String name = din.readUTF();
+                String says = din.readUTF();
+                int image = din.readInt();
+                PeopleNode myself = new PeopleNode(null, account, name, says, null);
+                myself.changeState(true);
+                while (din.readBoolean()) {
+                    String opposite_account = din.readUTF();
+                    System.out.println("对方账号为：" + opposite_account);
+                    String kind = din.readUTF();
+                    System.out.println("好友类型：" + kind);
+                    String opposite_name = din.readUTF();
+                    System.out.println("对方昵称为：" + opposite_name);
+                    String opposite_says = din.readUTF();
+                    int opposite_image = din.readInt();
+                    PeopleNode opposite_node = new PeopleNode(kind, opposite_account, opposite_name, opposite_says, null);
+                    opposite_node.changeState(din.readBoolean());
+                    people_list.add(opposite_node);
+                }
+                new Client(this, people_list, myself).UI();
+            } else {
+                System.out.println("登录失败，重新输入账号密码");
+                return false;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        new Client(this, people_list).UI();
 
         return true;
     }

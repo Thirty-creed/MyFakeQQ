@@ -30,10 +30,12 @@ public class Client {
     private ConcurrentHashMap<String, Chat> chatMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, String> messageMap = new ConcurrentHashMap<>();
     private final InteractWithServer handler;
+    private PeopleNode myself;
 
-    public Client(InteractWithServer handler, ArrayList<PeopleNode> people_list) {
+    public Client(InteractWithServer handler, ArrayList<PeopleNode> people_list, PeopleNode myself) {
         this.handler = handler;
         this.people_list = people_list;
+        this.myself = myself;
     }
 
     public void UI() {
@@ -81,7 +83,7 @@ public class Client {
         jf.setIconImage(img);
 
         // 呢称
-        JLabel name = new JLabel("昵称");
+        JLabel name = new JLabel(myself.getName());
         name.setForeground(Color.YELLOW);
         name.setBounds(150, 15, 60, 30);
         panel.add(name);
@@ -99,7 +101,7 @@ public class Client {
         panel.add(box);
 
         // 个性签名
-        JLabel says = new JLabel("个性签名");
+        JLabel says = new JLabel(myself.getSays());
         says.setForeground(Color.YELLOW);
         says.setBounds(150, 70, 100, 30);
         panel.add(says);

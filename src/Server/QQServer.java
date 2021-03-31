@@ -15,7 +15,7 @@ public class QQServer {
     private ConcurrentHashMap<String, DataOutputStream> DataOutHashMap = new ConcurrentHashMap<>();
 
     //对数据库进行操作
-    private static Statement statement;
+    private static Connection connection;
 
     public static void main(String[] args) {
 
@@ -24,8 +24,7 @@ public class QQServer {
         // 建立与数据库的连接
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/people_data", "root", null);
-            statement = connection.createStatement();
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/people_data", "root", null);
             System.out.println("建立与数据库的连接");
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,7 +49,7 @@ public class QQServer {
                 Socket socket = server.accept();
                 System.out.println("有个客户端连接进来了！");
                 //一个客户端建立一个线程处理
-                new ServerThread(socket, DataInputHashMap, DataOutHashMap, statement).start();
+                new ServerThread(socket, DataInputHashMap, DataOutHashMap, connection).start();
             } catch (IOException e) {
                 e.printStackTrace();
             }

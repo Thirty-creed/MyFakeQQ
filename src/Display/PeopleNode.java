@@ -30,12 +30,22 @@ public class PeopleNode extends DefaultMutableTreeNode {
         return name;
     }
 
+    public String getSays() {
+        return says;
+    }
+
     public ImageIcon getImageIcon() {
         return new ImageIcon("好友.png");
     }
 
     public boolean getOnLineState() {
         return OnLineState;
+    }
+
+
+    // 更改在线状态
+    public void changeState(boolean OnLineState) {
+        this.OnLineState = OnLineState;
     }
 
     public String getKind() {
