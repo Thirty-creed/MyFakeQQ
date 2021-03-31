@@ -62,12 +62,15 @@ public class InteractWithServer implements Operation {
             dout.writeInt(1);
             dout.writeUTF(account);//写入字符串
             int result = din.readInt();
+            //1表示登录成功
             if (result == 1) {
+                //接收自己的信息
                 String name = din.readUTF();
                 String says = din.readUTF();
                 int image = din.readInt();
-                PeopleNode myself = new PeopleNode(null, account, name, says, null);
-                myself.changeState(true);
+                PeopleNode myself = new PeopleNode(null, account, name, says, image);
+                myself.SetState(true);
+                //接收好友信息
                 while (din.readBoolean()) {
                     String opposite_account = din.readUTF();
                     System.out.println("对方账号为：" + opposite_account);
@@ -77,19 +80,19 @@ public class InteractWithServer implements Operation {
                     System.out.println("对方昵称为：" + opposite_name);
                     String opposite_says = din.readUTF();
                     int opposite_image = din.readInt();
-                    PeopleNode opposite_node = new PeopleNode(kind, opposite_account, opposite_name, opposite_says, null);
-                    opposite_node.changeState(din.readBoolean());
+                    PeopleNode opposite_node = new PeopleNode(kind, opposite_account, opposite_name, opposite_says, opposite_image);
+                    opposite_node.SetState(din.readBoolean());
                     people_list.add(opposite_node);
                 }
+                //根据信息创建客户端
                 new Client(this, people_list, myself).UI();
             } else {
-                System.out.println("登录失败，重新输入账号密码");
+                System.out.println("登录失败，请重新输入账号密码");
                 return false;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         return true;
     }

@@ -9,12 +9,12 @@ public class PeopleNode extends DefaultMutableTreeNode {
     private String account;
     private String name;
     private String says;
-    private ImageIcon head;
+    private int head;
 
     private boolean OnLineState = false;
 
-    public PeopleNode(String kind, String account, String name, String says, ImageIcon head) {
-        super(name);
+    public PeopleNode(String kind, String account, String name, String says, int head) {
+        super(name+"                 ");
         this.kind = kind;
         this.account = account;
         this.name = name;
@@ -35,7 +35,15 @@ public class PeopleNode extends DefaultMutableTreeNode {
     }
 
     public ImageIcon getImageIcon() {
-        return new ImageIcon("好友.png");
+
+        switch (head){
+            case 0:
+                return new ImageIcon("库里.jpg");
+            case 1:
+                return new ImageIcon("克雷.png");
+        }
+
+        return null;
     }
 
     public boolean getOnLineState() {
@@ -44,7 +52,7 @@ public class PeopleNode extends DefaultMutableTreeNode {
 
 
     // 更改在线状态
-    public void changeState(boolean OnLineState) {
+    public void SetState(boolean OnLineState) {
         this.OnLineState = OnLineState;
     }
 

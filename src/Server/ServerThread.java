@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerThread extends Thread {

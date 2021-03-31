@@ -24,13 +24,15 @@ public class Client {
     private final DefaultMutableTreeNode blacklist = new DefaultMutableTreeNode("黑名单");
     private JTree contacts_tree = new JTree(root);
 
+    private PeopleNode myself;
     private ArrayList<PeopleNode> people_list;
     private ConcurrentHashMap<String, PeopleNode> peopleMap = new ConcurrentHashMap<>();
 
     private ConcurrentHashMap<String, Chat> chatMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, String> messageMap = new ConcurrentHashMap<>();
+
     private final InteractWithServer handler;
-    private PeopleNode myself;
+
 
     public Client(InteractWithServer handler, ArrayList<PeopleNode> people_list, PeopleNode myself) {
         this.handler = handler;
@@ -65,9 +67,8 @@ public class Client {
 
         // 头像
         JLabel head = new JLabel();
-        Image img = new ImageIcon("头像.jpg").getImage().getScaledInstance(100, 100,
-                JFrame.DO_NOTHING_ON_CLOSE);
-        head.setIcon(new ImageIcon(img));
+        head.setIcon(new ImageIcon(myself.getImageIcon().getImage().getScaledInstance(100, 100,
+                JFrame.DO_NOTHING_ON_CLOSE)));
         head.setBounds(15, 15, 100, 100);
         panel.add(head);
         head.addMouseListener(new MouseAdapter() {
@@ -80,7 +81,7 @@ public class Client {
             }
 
         });
-        jf.setIconImage(img);
+        jf.setIconImage(myself.getImageIcon().getImage());
 
         // 呢称
         JLabel name = new JLabel(myself.getName());
@@ -195,7 +196,8 @@ public class Client {
                 if (!str.equals("我的好友") && !str.equals("黑名单") && !str.equals("陌生人")) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                     PeopleNode people = (PeopleNode) node;
-                    setIcon(people.getImageIcon());
+                    setIcon(new ImageIcon(people.getImageIcon().getImage().getScaledInstance(60, 60,
+                            JFrame.DO_NOTHING_ON_CLOSE)));
                     setFont(new Font("宋体", Font.BOLD, 15));
                 } else {
                     setFont(new Font("宋体", Font.BOLD, 20));
