@@ -201,10 +201,8 @@ public class Client {
                     setFont(new Font("ËÎÌו", Font.BOLD, 20));
                 }
 
-                setOpaque(false);
                 setBackgroundNonSelectionColor(new Color(255, 255, 255, 0));
                 setBackgroundSelectionColor(new Color(255, 255, 255, 100));
-                setTextNonSelectionColor(Color.BLACK);
 
                 return this;
             }

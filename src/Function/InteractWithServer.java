@@ -81,7 +81,8 @@ public class InteractWithServer implements Operation {
                     String opposite_says = din.readUTF();
                     int opposite_image = din.readInt();
                     PeopleNode opposite_node = new PeopleNode(kind, opposite_account, opposite_name, opposite_says, opposite_image);
-                    opposite_node.SetState(din.readBoolean());
+                    boolean is_online=din.readBoolean();
+                    opposite_node.SetState(is_online);
                     people_list.add(opposite_node);
                 }
                 //根据信息创建客户端
