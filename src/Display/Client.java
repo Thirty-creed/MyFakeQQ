@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 public class Client {
@@ -136,19 +135,13 @@ public class Client {
 
         jf.setVisible(true);
 
-        // 处理服务器发来的消息
+        // 处理服务器发来的消息(还未实现)
         new Thread() {
             @Override
             public void run() {
 
             }
         }.start();
-    }
-
-    // 使节点展开
-    public void expandTree(JTree jtree) {
-        TreeNode root = (TreeNode) jtree.getModel().getRoot();
-        jtree.expandPath(new TreePath(root));
     }
 
     // 对联系人的树进行属性和功能设置
@@ -162,13 +155,17 @@ public class Client {
             PeopleNode node = people_list.get(i);
             if (node.getKind().equals("我的好友")) {
                 friend.add(node);
+            }else if(node.getKind().equals("陌生人")){
+                stranger.add(node);
+            }else if(node.getKind().equals("黑名单")){
+                blacklist.add(node);
             }
             peopleMap.put(node.getAccount(), node);
         }
         // 隐藏根节点
         contacts_tree.setRootVisible(false);
         // 展开树
-        this.expandTree(contacts_tree);
+        contacts_tree.expandPath(new TreePath(root));
         // 设置透明
         contacts_tree.setOpaque(false);
         // 隐藏根柄

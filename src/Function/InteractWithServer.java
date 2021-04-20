@@ -61,6 +61,7 @@ public class InteractWithServer implements Operation {
         try {
             dout.writeInt(1);
             dout.writeUTF(account);//写入字符串
+            dout.writeUTF(password);
             int result = din.readInt();
             //1表示登录成功
             if (result == 1) {

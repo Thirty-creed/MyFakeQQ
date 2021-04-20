@@ -60,9 +60,10 @@ public class ServerThread extends Thread {
     public void LoginOperation() {
         try {
             account = din.readUTF();//读取字符串
+            String password= din.readUTF();
             try {
                 //在数据库查询账号判断是否存在
-                ResultSet re = connection.createStatement().executeQuery("select *from everyone where account=" + account);
+                ResultSet re = connection.createStatement().executeQuery("select *from everyone where account=" + account+" and password="+password);
                 //如果账号存在且处于不在线状态
                 if (re.next() && !re.getBoolean("state")) {
                     dout.writeInt(1);

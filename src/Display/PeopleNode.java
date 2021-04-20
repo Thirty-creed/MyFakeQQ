@@ -58,8 +58,8 @@ public class PeopleNode extends DefaultMutableTreeNode {
     }
 
     public ImageIcon getGrayImage(ImageIcon icon){
-        int w=icon.getImage().getWidth(null);
-        int h=icon.getImage().getHeight(null);
+        int w=icon.getIconWidth();
+        int h=icon.getIconHeight();
         BufferedImage buff=new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
         Graphics g=buff.getGraphics();
         g.drawImage(icon.getImage(),0,0,null);
